@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:jms="http://www.springframework.org/schema/jms"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/jms
+        http://www.springframework.org/schema/jms/spring-jms.xsd
+		http://activemq.apache.org/schema/core
+        http://activemq.apache.org/schema/core/activemq-core-5.8.0.xsd ">
+	<amq:connectionFactory id="amqConnectionFactory"
+		brokerURL="tcp://localhost:61616" userName="admin" password="admin"></amq:connectionFactory>
+	<!-- spring caching连接真正的工厂 -->
+	<!--里面可以产生jms Connection对象 -->
+	<bean id="connectionFactory"
+		class="org.springframework.jms.connection.CachingConnectionFactory">
+		<!--设置缓存数量数量 -->
+		<property name="targetConnectionFactory" ref="amqConnectionFactory"></property>
+		<property name="sessionCacheSize" value="100"></property>
+	</bean>
+	<!-- 这个需要设置成topic,e3-service,和e3-item-web同时订阅这个服务 -->
+	<!-- 定义jmsTemplate的queue类型 -->
+	<bean id="jmsQueueTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+		<constructor-arg ref="connectionFactory" />
+		<!-- pub/sub模型（发布/订阅,即队列模式 -->
+		<property name="pubSubDomain" value="true" />
+	</bean>
+</beans>
