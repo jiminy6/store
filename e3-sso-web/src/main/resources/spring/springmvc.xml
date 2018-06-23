@@ -24,10 +24,5 @@
 		<property name="prefix" value="/WEB-INF/jsp/"></property>
 		<property name="suffix" value=".jsp"></property>
 	</bean>
-	<!-- 引用dubbo服务 -->
-	<dubbo:application name="e3-sso-web"/>
-	<dubbo:registry protocol="zookeeper" address="192.168.78.134:2181"/>	
-	<dubbo:reference interface="cn.e3mall.sso.service.RegisterService" id="registerService" />
-	<dubbo:reference interface="cn.e3mall.sso.service.LoginService" id="loginService" />
-	<dubbo:reference interface="cn.e3mall.sso.service.TokenService" id="tokenService" />
+
 </beans>
